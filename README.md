@@ -36,13 +36,13 @@ config.txt
 4  
 
 
-memops.txt
+memops.txt  
 R 0x1000  
 W 0x1000 55  
 R 0x1080  
 R 0x1000  
 
-Output (example):
+Output (example):  
 L1: hits=2, misses=2, writebacks=0  
 L2: hits=0, misses=2, writebacks=0  
 MainMemory: reads=2, writes=0
