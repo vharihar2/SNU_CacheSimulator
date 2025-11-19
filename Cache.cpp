@@ -42,6 +42,7 @@ Revision History:
 
 Date          By                     Change Notes
 13 Nov 2025   Avi Mathur             Completed Cache class implementation
+19 Nov 2025   Avi Mathur             Updated cache.cpp
 */
 
 #include "Cache.h"
@@ -174,9 +175,16 @@ void Cache::write_byte(uint32_t addr, Cache* lower, uint8_t val) {
 }
 
 void Cache::debug_print() const {
-    cout << "=== " << name << " ===\n";
+    cout << "=== " << name << " ===  (legend: t=tag, *=dirty)  (ways=" << ways << ", sets=0.." << (sets_n>0?sets_n-1:0) << ")\n";
+    bool any_shown = false;
     for (size_t si = 0; si < sets.size(); ++si) {
-        cout << "set " << si << ": ";
+        bool set_has_valid = false;
+        for (size_t w = 0; w < sets[si].size(); ++w) {
+            if (sets[si][w].valid) { set_has_valid = true; break; }
+        }
+        if (!set_has_valid) continue; // omit empty sets
+        any_shown = true;
+        cout << "set " << si << " of " << (sets_n>0?sets_n-1:0) << ": ";
         for (size_t w = 0; w < sets[si].size(); ++w) {
             const auto &ln = sets[si][w];
             if (!ln.valid) cout << "[.--] ";
@@ -184,6 +192,7 @@ void Cache::debug_print() const {
         }
         cout << "\n";
     }
+    if (!any_shown) cout << "(no valid lines in any set)\n";
     cout << "hits=" << hits << " misses=" << misses << " writebacks=" << writebacks << "\n";
 }
 
